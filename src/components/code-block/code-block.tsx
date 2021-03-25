@@ -34,19 +34,13 @@ const CodeBlock: React.FC<CodeBlockProps> = ({
         language={syntax}
       >
         {({ tokens, getLineProps, getTokenProps }) => (
-          <pre className={`c-pre`}>
+          <pre>
             {/* Tokens are equivalent to each row/line of code text */}
             {tokens.map((line, index) => (
-              <div
-                // className="c-line"
-                key={index}
-                {...getLineProps({ line, key: index })}
-              >
-                {showCodeLines && (
-                  <span className="c-line-number">{index + 1} </span>
-                )}
+              <div key={index} {...getLineProps({ line, key: index })}>
+                {showCodeLines && <span>{index + 1} </span>}
 
-                <span className="c-line-content">
+                <span>
                   {/* Show code snippet for that line */}
                   {line.map((token, key) => (
                     <span key={key} {...getTokenProps({ token, key })} />
