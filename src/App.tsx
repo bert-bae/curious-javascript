@@ -2,6 +2,9 @@ import React from "react";
 import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
 import SearchNavigationBar from "components/search-navigation-bar";
+import Content from "components/content";
+
+import ArrowIcon from "@material-ui/icons/ArrowDownward";
 
 const useStyles = makeStyles((theme) => ({
   app: {
@@ -28,7 +31,16 @@ const App: React.FC<any> = () => {
         onSearchChange={() => console.log("change")}
         onSearchBlur={() => console.log("blur")}
       />
-      <Box className={classes.mainWebContainer}></Box>
+      <Box className={classes.mainWebContainer}>
+        <Content
+          title="Hello"
+          subtitle="world"
+          headerDivider={true}
+          HeaderRightIcon={<ArrowIcon />}
+        >
+          <Box>hello world</Box>
+        </Content>
+      </Box>
     </Box>
   );
 };
