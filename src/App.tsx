@@ -3,8 +3,7 @@ import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
 import SearchNavigationBar from "components/search-navigation-bar";
 import Content from "components/content";
-
-import ArrowIcon from "@material-ui/icons/ArrowDownward";
+import CodeBlock from "components/code-block";
 
 const useStyles = makeStyles((theme) => ({
   app: {
@@ -32,14 +31,14 @@ const App: React.FC<any> = () => {
         onSearchBlur={() => console.log("blur")}
       />
       <Box className={classes.mainWebContainer}>
-        <Content
-          title="Hello"
-          subtitle="world"
-          headerDivider={true}
-          HeaderRightIcon={<ArrowIcon />}
-        >
+        <Content title="Hello" subtitle="world" headerDivider={true}>
           <Box>hello world</Box>
         </Content>
+
+        <CodeBlock
+          syntax={"javascript"}
+          code={`console.log('hello')`}
+        ></CodeBlock>
       </Box>
     </Box>
   );
