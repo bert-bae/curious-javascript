@@ -1,26 +1,36 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import Box from "@material-ui/core/Box";
+import { makeStyles } from "@material-ui/core/styles";
+import SearchNavigationBar from "components/search-navigation-bar";
 
-function App() {
+const useStyles = makeStyles((theme) => ({
+  app: {
+    height: "100%",
+    width: "100%",
+  },
+  mainWebContainer: {
+    boxSizing: "border-box",
+    maxWidth: "1280px",
+    width: "100%",
+    height: "calc(100% - 64px)",
+    padding: theme.spacing(3),
+    overflowY: "auto",
+  },
+}));
+
+const App: React.FC<any> = () => {
+  const classes = useStyles();
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Box className={classes.app}>
+      <SearchNavigationBar
+        searchValue={"123123"}
+        onMenuClick={() => console.log("clicked")}
+        onSearchChange={() => console.log("change")}
+        onSearchBlur={() => console.log("blur")}
+      />
+      <Box className={classes.mainWebContainer}></Box>
+    </Box>
   );
-}
+};
 
 export default App;
