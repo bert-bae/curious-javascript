@@ -1,5 +1,6 @@
 import React from "react";
 import clsx from "clsx";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
 import Divider from "@material-ui/core/Divider";
@@ -33,7 +34,6 @@ const useStyles = makeStyles((theme) => ({
   },
   drawerPaper: {
     width: drawerWidth,
-    transition: "width 2s",
   },
   drawerHeader: {
     display: "flex",
@@ -49,6 +49,7 @@ const MenuDrawer: React.FC<MenuDrawerProps> = (props) => {
   const { open, onActionClick } = props;
   const classes = useStyles();
   const theme = useTheme();
+  const mobileView = useMediaQuery(theme.breakpoints.up("sm"));
 
   const listItemExample = ["Inbox", "Starred", "Send email", "Drafts"].map(
     (item) => {
@@ -61,7 +62,7 @@ const MenuDrawer: React.FC<MenuDrawerProps> = (props) => {
   return (
     <Drawer
       className={clsx(classes.drawer, {
-        [classes.drawerHidden]: !open,
+        [classes.drawerHidden]: !open || !mobileView,
       })}
       variant="persistent"
       anchor="left"
