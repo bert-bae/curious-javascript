@@ -1,4 +1,5 @@
 import React from "react";
+import Divider from "@material-ui/core/Divider";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
@@ -13,6 +14,7 @@ export type MenuDrawerListGroupProps = {
     variant?: "Article" | "Code";
     onListItemClick: () => void;
   }[];
+  showDivider?: boolean;
 };
 
 const ListVariantIcon = {
@@ -22,22 +24,26 @@ const ListVariantIcon = {
 
 const MenuDrawerListGroup: React.FC<MenuDrawerListGroupProps> = ({
   listItems,
+  showDivider,
 }) => {
   return (
-    <List>
-      {listItems.map((item, index) => (
-        <ListItem button key={item.label}>
-          <ListItemIcon>
-            {item.variant ? (
-              ListVariantIcon[item.variant]
-            ) : (
-              <FiberManualRecordIcon />
-            )}
-          </ListItemIcon>
-          <ListItemText primary={item.label} />
-        </ListItem>
-      ))}
-    </List>
+    <>
+      <List>
+        {listItems.map((item) => (
+          <ListItem button key={item.label} onClick={item.onListItemClick}>
+            <ListItemIcon>
+              {item.variant ? (
+                ListVariantIcon[item.variant]
+              ) : (
+                <FiberManualRecordIcon />
+              )}
+            </ListItemIcon>
+            <ListItemText primary={item.label} />
+          </ListItem>
+        ))}
+      </List>
+      {showDivider && <Divider />}
+    </>
   );
 };
 
