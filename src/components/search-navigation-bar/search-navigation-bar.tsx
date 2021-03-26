@@ -1,4 +1,5 @@
 import React from "react";
+import clsx from "clsx";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
@@ -7,6 +8,7 @@ import InputBase from "@material-ui/core/InputBase";
 import { fade, makeStyles } from "@material-ui/core/styles";
 import MenuIcon from "@material-ui/icons/Menu";
 import SearchIcon from "@material-ui/icons/Search";
+import { drawerWidth } from "components/menu-drawer";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -61,10 +63,25 @@ const useStyles = makeStyles((theme) => ({
       },
     },
   },
+  appBar: {
+    transition: theme.transitions.create(["margin", "width"], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+  },
+  appBarShift: {
+    width: `calc(100% - ${drawerWidth}px)`,
+    marginLeft: drawerWidth,
+    transition: theme.transitions.create(["margin", "width"], {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  },
 }));
 
 export type SearchNavigationBarProps = {
   searchValue: string;
+  drawerOpen: boolean;
   onMenuClick(): void;
   onSearchChange(event: React.ChangeEvent<HTMLInputElement>): void;
   onSearchBlur?(
@@ -74,6 +91,7 @@ export type SearchNavigationBarProps = {
 
 const SearchNavigationBar: React.FC<SearchNavigationBarProps> = ({
   searchValue,
+  drawerOpen,
   onSearchBlur,
   onSearchChange,
   onMenuClick,
@@ -82,7 +100,12 @@ const SearchNavigationBar: React.FC<SearchNavigationBarProps> = ({
 
   return (
     <div className={classes.root}>
-      <AppBar position="static">
+      <AppBar
+        position="fixed"
+        className={clsx(classes.appBar, {
+          [classes.appBarShift]: drawerOpen,
+        })}
+      >
         <Toolbar>
           <IconButton
             edge="start"
