@@ -8,9 +8,10 @@ export type EditableBlockProps = {
   id: string;
   html: string;
   tag: string;
-  updatePage(block: EditableContentBlock): void;
-  addBlock(block: EditableContentBlock): void;
-  deleteBlock(block: EditableContentBlock): void;
+  focusBlock(block: any): void;
+  addBlock(block: Pick<EditableContentBlock, "id" | "ref">): void;
+  deleteBlock(block: Pick<EditableContentBlock, "id" | "ref">): void;
+  updateBlock(block: EditableContentBlock): void;
 };
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -30,13 +31,46 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const EditableBlock: React.FC<EditableBlockProps> = (props) => {
+  const { addBlock, updateBlock, deleteBlock, focusBlock } = props;
   const classes = useStyles();
+  const [htmlBackup, setHtmlBackup] = React.useState<string>("");
   const [html, setHtml] = React.useState<string>(props.html);
   const [tag, setTag] = React.useState<string>(props.tag);
-  const contentEditable = React.useRef<HTMLElement>(null);
+  const [previousKey, setPreviousKey] = React.useState<any>(null);
+  const contentEditable = React.createRef<any>();
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
+    if (e.key === "/") {
+      setHtmlBackup(html);
+    }
+
+    if (e.key === "Enter") {
+      if (previousKey !== "Shift") {
+        e.preventDefault();
+        addBlock({
+          id: props.id,
+          ref: contentEditable.current,
+        });
+      }
+    }
+
+    if (e.key === "Backspace" && !html) {
+      e.preventDefault();
+      deleteBlock({
+        id: props.id,
+        ref: contentEditable.current,
+      });
+    }
+
+    setPreviousKey(e.key);
+  };
 
   const handleContentChange = (e: ContentEditableEvent) => {
     setHtml(e.target.value);
+  };
+
+  const handleBlockFocus = () => {
+    focusBlock(contentEditable.current);
   };
 
   return (
@@ -45,7 +79,10 @@ const EditableBlock: React.FC<EditableBlockProps> = (props) => {
       innerRef={contentEditable}
       html={html}
       tagName={tag}
+      onClick={focusBlock}
+      onFocus={focusBlock}
       onChange={handleContentChange}
+      onKeyDown={handleKeyDown}
     />
   );
 };
