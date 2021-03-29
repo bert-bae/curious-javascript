@@ -1,14 +1,39 @@
 import React from "react";
+import clsx from "clsx";
+import { BrowserRouter, Switch, Route } from "react-router-dom";
 import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
 import SearchNavigationBar from "components/search-navigation-bar";
 import MenuDrawer from "components/menu-drawer";
 import ArticleContainer from "features/article-container";
+import { Theme } from "@material-ui/core";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   app: {
     height: "100%",
     width: "100%",
+  },
+  drawerHeader: {
+    display: "flex",
+    alignItems: "center",
+    padding: theme.spacing(0, 1),
+    // necessary for content to be below app bar
+    ...theme.mixins.toolbar,
+    justifyContent: "flex-end",
+  },
+  content: {
+    flexGrow: 1,
+    padding: theme.spacing(3),
+    transition: theme.transitions.create("margin", {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+  },
+  contentShift: {
+    transition: theme.transitions.create("margin", {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
   },
 }));
 
@@ -39,7 +64,23 @@ const App: React.FC<any> = () => {
       />
       <Box display="flex">
         <MenuDrawer open={drawerOpen} onActionClick={handleDrawerAction} />
-        <ArticleContainer drawerOpen={drawerOpen} articleId="someId" />
+        <Box
+          className={clsx(classes.content, {
+            [classes.contentShift]: drawerOpen,
+          })}
+        >
+          <div className={classes.drawerHeader} />
+          <BrowserRouter>
+            <Switch>
+              <Route path="/articles">
+                <ArticleContainer drawerOpen={drawerOpen} articleId="someId" />
+              </Route>
+              <Route path="/authoring">
+                <Box>hello world</Box>
+              </Route>
+            </Switch>
+          </BrowserRouter>
+        </Box>
       </Box>
     </Box>
   );

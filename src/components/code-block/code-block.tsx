@@ -3,6 +3,7 @@ import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
 import Highlight, { defaultProps, Language } from "prism-react-renderer";
 import theme from "prism-react-renderer/themes/nightOwl";
+import { Theme } from "@material-ui/core";
 
 export type CodeBlockProps = {
   code: string;
@@ -10,7 +11,7 @@ export type CodeBlockProps = {
   showCodeLines?: boolean;
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   codeBlockContainer: {
     borderRadius: theme.shape.borderRadius,
     backgroundColor: "black",

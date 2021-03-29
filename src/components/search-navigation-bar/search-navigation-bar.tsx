@@ -9,9 +9,10 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { makeStyles, useTheme, fade } from "@material-ui/core/styles";
 import MenuIcon from "@material-ui/icons/Menu";
 import SearchIcon from "@material-ui/icons/Search";
+import { Theme } from "@material-ui/core";
 import { drawerWidth } from "components/menu-drawer";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
     flexGrow: 1,
   },
