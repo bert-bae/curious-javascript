@@ -3,3 +3,10 @@ export enum MenuDrawerVariants {
   "Article" = "Article",
   "Code" = "Code",
 }
+
+export type EditableContentBlock = {
+  id: string;
+  tag: string;
+  html: string;
+  ref?: any;
+};

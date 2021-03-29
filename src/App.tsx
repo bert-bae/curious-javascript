@@ -6,6 +6,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import SearchNavigationBar from "components/search-navigation-bar";
 import MenuDrawer from "components/menu-drawer";
 import ArticleContainer from "features/article-container";
+import AuthoringContainer from "features/authoring-container";
 import { Theme } from "@material-ui/core";
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -76,7 +77,7 @@ const App: React.FC<any> = () => {
                 <ArticleContainer drawerOpen={drawerOpen} articleId="someId" />
               </Route>
               <Route path="/authoring">
-                <Box>hello world</Box>
+                <AuthoringContainer />
               </Route>
             </Switch>
           </BrowserRouter>
