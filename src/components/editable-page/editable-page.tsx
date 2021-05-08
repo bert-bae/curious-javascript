@@ -2,6 +2,7 @@ import React from "react";
 import { v4 as uuidv4 } from "uuid";
 import Box from "@material-ui/core/Box";
 import EditableBlock from "./editable-block";
+import { setCaretToEnd } from "./carat-helper";
 import { EditableContentBlock } from "types";
 export type EditablePageProps = {
   blocks: EditableContentBlock[];
@@ -9,7 +10,7 @@ export type EditablePageProps = {
 
 const createBlankBlock = (): EditableContentBlock => {
   const id = uuidv4();
-  return { id, html: `<div>${id}</div>`, tag: "p" };
+  return { id, html: "", tag: "p" };
 };
 
 const EditablePage: React.FC<EditablePageProps> = (props) => {
@@ -56,6 +57,7 @@ const EditablePage: React.FC<EditablePageProps> = (props) => {
   React.useEffect(() => {
     if (blockInFocus) {
       document.getElementById(blockInFocus.id)?.focus();
+      setCaretToEnd(blockInFocus.id);
     }
   }, [blockInFocus]);
 

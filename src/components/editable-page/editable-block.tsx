@@ -1,8 +1,9 @@
 import React from "react";
-import Box from "@material-ui/core/Box";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import ContentEditable, { ContentEditableEvent } from "react-contenteditable";
-import { EditableContentBlock } from "types";
+import SelectMenu from "./select-menu";
+import { getCaretCoordinates, setCaretToEnd } from "./carat-helper";
+import { EditableContentBlock, ElementTagTypes } from "types";
 
 export type EditableBlockProps = {
   id: string;
@@ -36,7 +37,41 @@ const EditableBlock: React.FC<EditableBlockProps> = (props) => {
   const [html, setHtml] = React.useState<string>(props.html);
   const [tag, setTag] = React.useState<string>(props.tag);
   const [previousKey, setPreviousKey] = React.useState<any>(null);
+  const [isMenuOpen, setIsMenuOpen] = React.useState<boolean>(false);
+  const [menuPosition, setMenuPosition] = React.useState<{
+    x: number;
+    y: number;
+  }>({ x: 0, y: 0 });
+
   const contentEditable = React.createRef<any>();
+
+  const handleContentChange = (e: ContentEditableEvent) => {
+    setHtml(e.target.value);
+  };
+
+  const handleSelectMenuOpen = () => {
+    setIsMenuOpen(true);
+    setMenuPosition(getCaretCoordinates());
+  };
+
+  const handleSelectMenuClose = () => {
+    setHtml(htmlBackup);
+    setHtmlBackup("");
+    setIsMenuOpen(false);
+    setMenuPosition({ x: 0, y: 0 });
+  };
+
+  const handleTagSelection = (tag: ElementTagTypes) => {
+    setTag(tag);
+    setCaretToEnd(props.id);
+    handleSelectMenuClose();
+  };
+
+  const handleKeyUp = (e: React.KeyboardEvent<HTMLElement>) => {
+    if (e.key === "/") {
+      handleSelectMenuOpen();
+    }
+  };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
     if (e.key === "/") {
@@ -44,7 +79,7 @@ const EditableBlock: React.FC<EditableBlockProps> = (props) => {
     }
 
     if (e.key === "Enter") {
-      if (previousKey !== "Shift") {
+      if (previousKey !== "Shift" && !isMenuOpen) {
         e.preventDefault();
         addBlock({
           id: props.id,
@@ -64,20 +99,27 @@ const EditableBlock: React.FC<EditableBlockProps> = (props) => {
     setPreviousKey(e.key);
   };
 
-  const handleContentChange = (e: ContentEditableEvent) => {
-    setHtml(e.target.value);
-  };
-
   return (
-    <ContentEditable
-      id={props.id}
-      className={classes.block}
-      innerRef={contentEditable}
-      html={html}
-      tagName={tag}
-      onChange={handleContentChange}
-      onKeyDown={handleKeyDown}
-    />
+    <>
+      {isMenuOpen && (
+        <SelectMenu
+          positionX={menuPosition.x}
+          positionY={menuPosition.y}
+          onSelect={handleTagSelection}
+          onClose={handleSelectMenuClose}
+        />
+      )}
+      <ContentEditable
+        id={props.id}
+        className={classes.block}
+        innerRef={contentEditable}
+        html={html}
+        tagName={tag}
+        onChange={handleContentChange}
+        onKeyDown={handleKeyDown}
+        onKeyUp={handleKeyUp}
+      />
+    </>
   );
 };
 
