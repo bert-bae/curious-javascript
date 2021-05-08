@@ -16,8 +16,10 @@ const EditablePage: React.FC<EditablePageProps> = (props) => {
   const [blocks, setBlocks] = React.useState<EditableContentBlock[]>(
     props.blocks.length === 0 ? [createBlankBlock()] : props.blocks
   );
-  const [blockInFocus, setBlockInFocus] = React.useState<any>();
-  const [lastCommand, setLastCommand] = React.useState<string>("");
+  const [
+    blockInFocus,
+    setBlockInFocus,
+  ] = React.useState<EditableContentBlock>();
 
   const handleUpdatePageBlock = (updatedBlock: EditableContentBlock) => {
     const updatedBlocks = [...blocks];
@@ -25,20 +27,6 @@ const EditablePage: React.FC<EditablePageProps> = (props) => {
     updatedBlocks[index] = updatedBlock;
     setBlocks(updatedBlocks);
   };
-
-  React.useEffect(() => {
-    if (lastCommand === "Add") {
-      blockInFocus.nextElementSibling.focus();
-    }
-    if (lastCommand === "Delete") {
-      const prev = blockInFocus.previousElementSibling;
-
-      if (prev) {
-        blockInFocus.previousElementSibling.focus();
-      }
-    }
-    setLastCommand("");
-  }, [blocks]);
 
   const handleAddPageBlock = (
     currentBlock: Pick<EditableContentBlock, "id" | "ref">
@@ -48,7 +36,7 @@ const EditablePage: React.FC<EditablePageProps> = (props) => {
     const index = updatedBlocks.findIndex((x) => x.id === currentBlock.id);
     updatedBlocks.splice(index + 1, 0, newBlock);
     setBlocks(updatedBlocks);
-    setLastCommand("Add");
+    setBlockInFocus(newBlock);
   };
 
   const handleDeletePageBlock = (
@@ -61,13 +49,15 @@ const EditablePage: React.FC<EditablePageProps> = (props) => {
       const index = updatedBlocks.findIndex((x) => x.id === currentBlock.id);
       updatedBlocks.splice(index, 1);
       setBlocks(updatedBlocks);
-      setLastCommand("Delete");
+      setBlockInFocus(prevBlock);
     }
   };
 
-  const handleBlockInFocus = (block: any) => {
-    setBlockInFocus(block);
-  };
+  React.useEffect(() => {
+    if (blockInFocus) {
+      document.getElementById(blockInFocus.id)?.focus();
+    }
+  }, [blockInFocus]);
 
   return (
     <Box>
@@ -77,7 +67,6 @@ const EditablePage: React.FC<EditablePageProps> = (props) => {
           id={block.id}
           tag={block.tag}
           html={block.html}
-          focusBlock={handleBlockInFocus}
           addBlock={handleAddPageBlock}
           deleteBlock={handleDeletePageBlock}
           updateBlock={handleUpdatePageBlock}

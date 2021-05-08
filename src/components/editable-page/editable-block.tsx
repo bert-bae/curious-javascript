@@ -8,7 +8,6 @@ export type EditableBlockProps = {
   id: string;
   html: string;
   tag: string;
-  focusBlock(block: any): void;
   addBlock(block: Pick<EditableContentBlock, "id" | "ref">): void;
   deleteBlock(block: Pick<EditableContentBlock, "id" | "ref">): void;
   updateBlock(block: EditableContentBlock): void;
@@ -31,7 +30,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const EditableBlock: React.FC<EditableBlockProps> = (props) => {
-  const { addBlock, updateBlock, deleteBlock, focusBlock } = props;
+  const { addBlock, deleteBlock } = props;
   const classes = useStyles();
   const [htmlBackup, setHtmlBackup] = React.useState<string>("");
   const [html, setHtml] = React.useState<string>(props.html);
@@ -69,18 +68,13 @@ const EditableBlock: React.FC<EditableBlockProps> = (props) => {
     setHtml(e.target.value);
   };
 
-  const handleBlockFocus = () => {
-    focusBlock(contentEditable.current);
-  };
-
   return (
     <ContentEditable
+      id={props.id}
       className={classes.block}
       innerRef={contentEditable}
       html={html}
       tagName={tag}
-      onClick={focusBlock}
-      onFocus={focusBlock}
       onChange={handleContentChange}
       onKeyDown={handleKeyDown}
     />
