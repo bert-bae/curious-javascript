@@ -8,6 +8,8 @@ import IconButton from "@material-ui/core/IconButton";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import MenuDrawerListGroup from "./menu-drawer-list-group";
+import { MenuDrawerVariants } from "types";
+import { Theme } from "@material-ui/core";
 
 export const drawerWidth = 240;
 export type MenuDrawerProps = {
@@ -15,7 +17,7 @@ export type MenuDrawerProps = {
   onActionClick: () => void;
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
     display: "flex",
   },
@@ -51,14 +53,23 @@ const MenuDrawer: React.FC<MenuDrawerProps> = (props) => {
   const theme = useTheme();
   const mobileView = useMediaQuery(theme.breakpoints.up("sm"));
 
-  const listItemExample = ["Inbox", "Starred", "Send email", "Drafts"].map(
-    (item) => {
-      return {
-        label: item,
-        onListItemClick: () => alert(`Action for ${item} not implemented`),
-      };
-    }
-  );
+  const listItemExample = [
+    {
+      label: "Authoring",
+      variant: MenuDrawerVariants.Authoring,
+    },
+    {
+      label: "Articles",
+      variant: MenuDrawerVariants.Article,
+    },
+  ].map((item) => {
+    return {
+      label: item.label,
+      variant: item.variant,
+      onListItemClick: () =>
+        (window.location.href = `${item.label.toLowerCase()}`),
+    };
+  });
   return (
     <Drawer
       className={clsx(classes.drawer, {

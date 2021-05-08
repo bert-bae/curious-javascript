@@ -2,6 +2,7 @@ import React from "react";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
+import { Theme } from "@material-ui/core";
 
 export type ContentHeaderProps = {
   title: string;
@@ -11,7 +12,7 @@ export type ContentHeaderProps = {
   HeaderRightIcon?: React.ReactNode;
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   contentHeaderContainer: {
     marginBottom: theme.spacing(2),
   },

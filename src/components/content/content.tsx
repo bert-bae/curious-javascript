@@ -2,10 +2,11 @@ import ContentHeader, { ContentHeaderProps } from "./content-header";
 import ContentBody, { ContentBodyProps } from "./content-body";
 import { makeStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
+import { Theme } from "@material-ui/core";
 
 export type ContentProps = ContentHeaderProps & ContentBodyProps;
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   content: {
     padding: theme.spacing(2),
   },

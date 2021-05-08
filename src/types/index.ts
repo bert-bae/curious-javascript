@@ -1,0 +1,32 @@
+export enum MenuDrawerVariants {
+  "Authoring" = "Authoring",
+  "Article" = "Article",
+  "Code" = "Code",
+}
+
+export type EditableContentBlock = {
+  id: string;
+  tag: string;
+  html: string;
+  ref?: any;
+};
+
+export enum ElementTagTitles {
+  PageTitle = "PageTitle",
+  Heading = "Heading",
+  Subheading = "Subheading",
+  Paragraph = "Paragraph",
+}
+
+export enum ElementTagTypes {
+  h1 = "h1",
+  h2 = "h2",
+  h3 = "h3",
+  p = "p",
+}
+
+export type ElementTag = {
+  id: ElementTagTitles;
+  tag: ElementTagTypes;
+  label: string;
+};
