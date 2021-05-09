@@ -28,8 +28,6 @@ const elementTags: ElementTag[] = [
 ];
 
 export type SelectMenuProps = {
-  positionX: number;
-  positionY: number;
   onSelect(tag: ElementTagTypes): void;
   onClose(): void;
 };
@@ -37,11 +35,14 @@ export type SelectMenuProps = {
 const useStyles = makeStyles((props: SelectMenuProps) => ({
   menu: {
     position: "absolute",
-    top: props.positionX,
-    left: props.positionY,
+    top: "100%",
+    right: 0,
+    marginTop: "3px",
+    padding: "0 auto",
     backgroundColor: "white",
     borderRadius: "5px",
     border: "1px solid lightgrey",
+    width: "150px",
   },
   menuItem: {
     padding: "5px",
@@ -66,6 +67,7 @@ const SelectMenu: React.FC<SelectMenuProps> = (props) => {
         e.preventDefault();
         onSelect(items[selectedItemIndex].tag);
         break;
+      case "Escape":
       case "Backspace":
         if (!command) {
           onClose();
