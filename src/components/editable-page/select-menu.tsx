@@ -25,6 +25,11 @@ const elementTags: ElementTag[] = [
     tag: ElementTagTypes.p,
     label: "Paragraph",
   },
+  {
+    id: ElementTagTitles.CodeBlock,
+    tag: ElementTagTypes.code,
+    label: "Code block",
+  },
 ];
 
 export type SelectMenuProps = {
@@ -62,10 +67,11 @@ const SelectMenu: React.FC<SelectMenuProps> = (props) => {
   const classes = useStyles(props);
 
   const handleKeyDown = (e: KeyboardEvent): void => {
+    console.log(e.key);
     switch (e.key) {
       case "Enter":
         e.preventDefault();
-        onSelect(items[selectedItemIndex].tag);
+        onSelect(items[selectedItemIndex]?.tag);
         break;
       case "Escape":
       case "Backspace":

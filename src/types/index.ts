@@ -16,6 +16,7 @@ export enum ElementTagTitles {
   Heading = "Heading",
   Subheading = "Subheading",
   Paragraph = "Paragraph",
+  CodeBlock = "CodeBlock",
 }
 
 export enum ElementTagTypes {
@@ -23,6 +24,7 @@ export enum ElementTagTypes {
   h2 = "h2",
   h3 = "h3",
   p = "p",
+  code = "code",
 }
 
 export type ElementTag = {
