@@ -1,5 +1,6 @@
 import React from "react";
 import Box from "@material-ui/core/Box";
+import clsx from "clsx";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import ContentEditable, { ContentEditableEvent } from "react-contenteditable";
 import SelectMenu from "./select-menu";
@@ -17,6 +18,7 @@ export type EditableBlockProps = {
 
 const useStyles = makeStyles((theme: Theme) => ({
   block: {
+    display: "block",
     padding: theme.spacing(1),
     margin: 0,
     borderRadius: theme.shape.borderRadius,
@@ -29,7 +31,22 @@ const useStyles = makeStyles((theme: Theme) => ({
       outlineColor: "#E8E8E8",
     },
   },
+  codeBlock: {
+    background: "#4A4A4A",
+    outlineColor: "#4A4A4A",
+    color: "white",
+    "&:hover": {
+      background: "#3F3F3F",
+      outlineColor: "#3F3F3F",
+    },
+    "&:focus": {
+      background: "#333333",
+      outlineColor: "#333333",
+    },
+  },
 }));
+
+const whiteSpace = "&nbsp;";
 
 const EditableBlock: React.FC<EditableBlockProps> = (props) => {
   const { addBlock, deleteBlock } = props;
@@ -37,7 +54,6 @@ const EditableBlock: React.FC<EditableBlockProps> = (props) => {
   const [htmlBackup, setHtmlBackup] = React.useState<string>("");
   const [html, setHtml] = React.useState<string>(props.html);
   const [tag, setTag] = React.useState<string>(props.tag);
-  const [previousKey, setPreviousKey] = React.useState<any>(null);
   const [isMenuOpen, setIsMenuOpen] = React.useState<boolean>(false);
 
   const contentEditable = React.createRef<any>();
@@ -48,6 +64,7 @@ const EditableBlock: React.FC<EditableBlockProps> = (props) => {
 
   const handleSelectMenuOpen = () => {
     setIsMenuOpen(true);
+    document.addEventListener("click", handleSelectMenuClose);
   };
 
   const handleSelectMenuClose = () => {
@@ -57,7 +74,9 @@ const EditableBlock: React.FC<EditableBlockProps> = (props) => {
   };
 
   const handleTagSelection = (tag: ElementTagTypes) => {
-    setTag(tag);
+    if (tag) {
+      setTag(tag);
+    }
     setCaretToEnd(props.id);
     handleSelectMenuClose();
   };
@@ -73,14 +92,12 @@ const EditableBlock: React.FC<EditableBlockProps> = (props) => {
       setHtmlBackup(html);
     }
 
-    if (e.key === "Enter") {
-      if (previousKey !== "Shift" && !isMenuOpen) {
-        e.preventDefault();
-        addBlock({
-          id: props.id,
-          ref: contentEditable.current,
-        });
-      }
+    if (!e.shiftKey && !isMenuOpen && e.key === "Enter") {
+      e.preventDefault();
+      addBlock({
+        id: props.id,
+        ref: contentEditable.current,
+      });
     }
 
     if (e.key === "Backspace" && !html) {
@@ -91,14 +108,22 @@ const EditableBlock: React.FC<EditableBlockProps> = (props) => {
       });
     }
 
-    setPreviousKey(e.key);
+    if (e.key === "Tab") {
+      e.preventDefault();
+      setHtml((prev) => {
+        // Adding spaces in `code` html tag with no prior whitespace creates unwanted new <br>
+        // Remove unwanted <br> at end of prev if it exists
+        const removeLastNewLine = prev.replace(/\<br\/?\>$/, "");
+        return `${removeLastNewLine}${whiteSpace + whiteSpace}`;
+      });
+    }
   };
 
   return (
-    <Box style={{ position: "relative" }}>
+    <Box style={{ position: "relative" }} spellCheck={tag === "code"}>
       <ContentEditable
         id={props.id}
-        className={classes.block}
+        className={clsx(classes.block, tag === "code" && classes.codeBlock)}
         innerRef={contentEditable}
         html={html}
         tagName={tag}

@@ -43,14 +43,13 @@ const EditablePage: React.FC<EditablePageProps> = (props) => {
   const handleDeletePageBlock = (
     currentBlock: Pick<EditableContentBlock, "id" | "ref">
   ) => {
-    const prevBlock = currentBlock.ref.previousElementSibling;
-
-    if (prevBlock) {
+    const index = blocks.findIndex((b) => b.id === currentBlock.id);
+    if (index > 0) {
       const updatedBlocks = [...blocks];
       const index = updatedBlocks.findIndex((x) => x.id === currentBlock.id);
       updatedBlocks.splice(index, 1);
       setBlocks(updatedBlocks);
-      setBlockInFocus(prevBlock);
+      setBlockInFocus(blocks[index - 1]);
     }
   };
 
