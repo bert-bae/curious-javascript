@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   block: {
     display: "block",
     padding: theme.spacing(1),
-    margin: 0,
+    margin: "3px 0",
     borderRadius: theme.shape.borderRadius,
     "&:hover": {
       background: "#F5F5F5",
@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 const whiteSpace = "&nbsp;";
 
 const EditableBlock: React.FC<EditableBlockProps> = (props) => {
-  const { addBlock, deleteBlock } = props;
+  const { addBlock, deleteBlock, updateBlock } = props;
   const classes = useStyles();
   const [htmlBackup, setHtmlBackup] = React.useState<string>("");
   const [html, setHtml] = React.useState<string>(props.html);
@@ -64,12 +64,14 @@ const EditableBlock: React.FC<EditableBlockProps> = (props) => {
 
   const handleSelectMenuOpen = () => {
     setIsMenuOpen(true);
-    document.addEventListener("click", handleSelectMenuClose);
+    document.addEventListener("click", () => handleSelectMenuClose(false));
   };
 
-  const handleSelectMenuClose = () => {
-    setHtml(htmlBackup);
-    setHtmlBackup("");
+  const handleSelectMenuClose = (clearCmd?: boolean) => {
+    if (clearCmd) {
+      setHtml(htmlBackup);
+      setHtmlBackup("");
+    }
     setIsMenuOpen(false);
   };
 
@@ -78,7 +80,7 @@ const EditableBlock: React.FC<EditableBlockProps> = (props) => {
       setTag(tag);
     }
     setCaretToEnd(props.id);
-    handleSelectMenuClose();
+    handleSelectMenuClose(true);
   };
 
   const handleKeyUp = (e: React.KeyboardEvent<HTMLElement>) => {
@@ -118,6 +120,14 @@ const EditableBlock: React.FC<EditableBlockProps> = (props) => {
       });
     }
   };
+
+  React.useEffect(() => {
+    updateBlock({
+      id: props.id,
+      html,
+      tag,
+    });
+  }, [html, tag]);
 
   return (
     <Box style={{ position: "relative" }} spellCheck={tag === "code"}>
