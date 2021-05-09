@@ -1,8 +1,9 @@
 import React from "react";
+import Box from "@material-ui/core/Box";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import ContentEditable, { ContentEditableEvent } from "react-contenteditable";
 import SelectMenu from "./select-menu";
-import { getCaretCoordinates, setCaretToEnd } from "./carat-helper";
+import { setCaretToEnd } from "./carat-helper";
 import { EditableContentBlock, ElementTagTypes } from "types";
 
 export type EditableBlockProps = {
@@ -38,10 +39,6 @@ const EditableBlock: React.FC<EditableBlockProps> = (props) => {
   const [tag, setTag] = React.useState<string>(props.tag);
   const [previousKey, setPreviousKey] = React.useState<any>(null);
   const [isMenuOpen, setIsMenuOpen] = React.useState<boolean>(false);
-  const [menuPosition, setMenuPosition] = React.useState<{
-    x: number;
-    y: number;
-  }>({ x: 0, y: 0 });
 
   const contentEditable = React.createRef<any>();
 
@@ -51,14 +48,12 @@ const EditableBlock: React.FC<EditableBlockProps> = (props) => {
 
   const handleSelectMenuOpen = () => {
     setIsMenuOpen(true);
-    setMenuPosition(getCaretCoordinates());
   };
 
   const handleSelectMenuClose = () => {
     setHtml(htmlBackup);
     setHtmlBackup("");
     setIsMenuOpen(false);
-    setMenuPosition({ x: 0, y: 0 });
   };
 
   const handleTagSelection = (tag: ElementTagTypes) => {
@@ -100,15 +95,7 @@ const EditableBlock: React.FC<EditableBlockProps> = (props) => {
   };
 
   return (
-    <>
-      {isMenuOpen && (
-        <SelectMenu
-          positionX={menuPosition.x}
-          positionY={menuPosition.y}
-          onSelect={handleTagSelection}
-          onClose={handleSelectMenuClose}
-        />
-      )}
+    <Box style={{ position: "relative" }}>
       <ContentEditable
         id={props.id}
         className={classes.block}
@@ -119,7 +106,13 @@ const EditableBlock: React.FC<EditableBlockProps> = (props) => {
         onKeyDown={handleKeyDown}
         onKeyUp={handleKeyUp}
       />
-    </>
+      {isMenuOpen && (
+        <SelectMenu
+          onSelect={handleTagSelection}
+          onClose={handleSelectMenuClose}
+        />
+      )}
+    </Box>
   );
 };
 
